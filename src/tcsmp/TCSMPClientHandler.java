@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import puzzle.Puzzle;
+
 
 public class TCSMPClientHandler extends Thread {
 
@@ -136,16 +138,15 @@ public class TCSMPClientHandler extends Thread {
 		System.out.println("reciverMail : " + reciverMail);
 		System.out.println("getDomain(reciverMail) : " + getDomain(reciverMail));
 		System.out.println("getDomain(reciverMail).equals(\"POUET.com\") : " + getDomain(reciverMail).equals("POUET.com"));
-		if(getDomain(reciverMail).equals("POUET.com")) {
+		if(getDomain(reciverMail).equals("BINIOU.com")) {
 
-	    	TCSMPSession tcsmp = new TCSMPSession(
+	    	TCSMPClientSession tcsmp = new TCSMPClientSession(
 	           "localhost",
 	           1998,
 	           "X@POUET.com",
 	           "Y@BINIOU.com",
 	           "Some subject",
-	           "... Message text ...",
-	           false);
+	           "... Message text ...");
 
 	        try {
 	        	System.out.println("Sending e-mail...");

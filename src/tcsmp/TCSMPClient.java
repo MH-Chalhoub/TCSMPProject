@@ -4,13 +4,13 @@ public class TCSMPClient
 {
     public static void main(String[] args)
     {
-    	TCSMPSession tcsmp = new TCSMPSession(
+    	TCSMPClientSession tcsmp = new TCSMPClientSession(
            "localhost",
-           "X@POUET.com",
+           1999,
            "Y@BINIOU.com",
+           "X@POUET.com",
            "Some subject",
-           "... Message text ...",
-           true);
+           "... Message text ...");
 
         try {
         	System.out.println("Sending e-mail...");
