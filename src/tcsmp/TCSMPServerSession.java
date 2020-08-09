@@ -199,7 +199,7 @@ public class TCSMPServerSession {
 		// System.out.println("checkServerResponse done");
 
 		// Introduce ourselves to the TCSMP server with a polite "HELO localhostname"
-		doCommand("TELO " + getDomain(sender), '2');
+		doCommand("TELO " + getDomain(recipient), '2');
 
 		// Tell the server who this message is from
 		doCommand("FROM <" + sender + ">", '2');

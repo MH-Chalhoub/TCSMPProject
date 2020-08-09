@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import mail.Mail;
+
 //The role of the TCSMP Server is contacting clients according to TCSMP Protocol defined in the RFC and forwarding the msg to the TPOP Server
 
 public class TCSMPServer {
@@ -22,6 +24,7 @@ public class TCSMPServer {
 	public static void main(String[] args) {
 		//ArrayList<MailBox> MailBoxs = new ArrayList<MailBox> ();
 		ArrayList<TCSMPClientHandler> clients = new ArrayList<TCSMPClientHandler> ();
+		ArrayList<Mail> mailBoxs = new ArrayList<Mail> ();
 		
 		dns = new HashMap<String, Integer>();	//I did use diffrent port for each TCSMP server because i have only one machine(one NIC Card)
 		dns.put("BINIOU.com", 1998);
@@ -33,8 +36,8 @@ public class TCSMPServer {
 		
 		PORT = dns.get(serverDomain);
 		
-		System.out.println("Server Domain Name : " + serverDomain
-				+ "\nPort # : " + PORT);
+		System.out.println("Server Domain Name : " + serverDomain + "\nPort # : " + PORT);
+    	System.out.println("Mail Boxs and Client Handler are created");
 		
         try {
             servSock = new ServerSocket(PORT);
@@ -50,6 +53,8 @@ public class TCSMPServer {
                     while (true) {
                     	System.out.println("Wainting for connection ...");
                         link = servSock.accept();
+                        System.out.println("Connection accepted ...");
+                        /*------------------------------------------------------------------------------------------------------*/
                     	DataOutputStream out;
                     	DataInputStream in;
             			out = new DataOutputStream(link.getOutputStream());
@@ -58,9 +63,8 @@ public class TCSMPServer {
             			out.writeUTF("220 " + serverDomain + " Time Control Stamped Mail Protocol");
             			clientDomain = in.readUTF();
             			clientDomain = clientDomain.replace("\n", "").replace("\r", "");
-                        System.out.println("Connection accepted ...");
-
-                        TCSMPClientHandler cl = new TCSMPClientHandler(link, clients, serverDomain, clientDomain);
+            			/*------------------------------------------------------------------------------------------------------*/
+                        TCSMPClientHandler cl = new TCSMPClientHandler(link, clients, serverDomain, clientDomain, mailBoxs);
                         cl.start();
                         clients.add(cl);
                         //MailBox mb = new MailBox("", link.getPort(), link.getRemoteSocketAddress().toString(), "", serverDomain, link);
