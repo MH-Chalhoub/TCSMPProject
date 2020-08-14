@@ -2,23 +2,23 @@ package tpop;
 
 import java.util.StringTokenizer;
 
-public class POP3Client {
+public class TPOPClient {
 	public static void main(String[] args) {
-		POP3Session pop3 = new POP3Session("pop.mycompany.com", "username", "password");
+		TPOPSession tpop = new TPOPSession("pop.mycompany.com", "username", "password");
 		try {
-			System.out.println("Connecting to POP3 server...");
-			pop3.connectAndAuthenticate();
-			System.out.println("Connected to POP3 server.");
+			System.out.println("Connecting to TPOP server...");
+			tpop.connectAndAuthenticate();
+			System.out.println("Connected to TPOP server.");
 
-			int messageCount = pop3.getMessageCount();
+			int messageCount = tpop.getMessageCount();
 			System.out.println("\nWaiting massages on POP3 server : " + messageCount);
 
-			String[] messages = pop3.getHeaders();
+			String[] messages = tpop.getHeaders();
 			for (int i = 0; i < messages.length; i++) {
 				StringTokenizer messageTokens = new StringTokenizer(messages[i]);
 				String messageId = messageTokens.nextToken();
 				String messageSize = messageTokens.nextToken();
-				String messageBody = pop3.getMessage(messageId);
+				String messageBody = tpop.getMessage(messageId);
 
 				System.out.println("\n-------------------- messsage " + messageId + ", size=" + messageSize
 						+ " --------------------");
@@ -26,7 +26,7 @@ public class POP3Client {
 				System.out.println("-------------------- end of message " + messageId + " --------------------");
 			}
 		} catch (Exception e) {
-			pop3.close();
+			tpop.close();
 			System.out.println("Can not receive e-mail!");
 			e.printStackTrace();
 		}

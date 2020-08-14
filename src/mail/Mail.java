@@ -45,19 +45,19 @@ public class Mail {
 			String [] tokens = line.split(":", 0);
 			
 			if(tokens[0].equals("Date")) {
-				this.date = line.replace("\n", "").replace("\r", "").trim();
+				this.date = tokens[1].replace("\n", "").replace("\r", "").trim();
 			}
 			else if(tokens[0].equals("Sender")) {
 				
 			}
 			else if(tokens[0].equals("From")) {
-				this.sender = line.replace("\n", "").replace("\r", "").trim();
+				this.sender = tokens[1].replace("\n", "").replace("\r", "").trim();
 			}
 			else if(tokens[0].equals("To")) {
-				this.reciver = line.replace("\n", "").replace("\r", "").trim();
+				this.reciver = tokens[1].replace("\n", "").replace("\r", "").trim();
 			}
 			else if(tokens[0].equals("Subject")) {
-				this.subject = line.replace("\n", "").replace("\r", "").trim();
+				this.subject = tokens[1].replace("\n", "").replace("\r", "").trim();
 			}
 			else {
 				if(!line.equals(".\n") && line!=null)

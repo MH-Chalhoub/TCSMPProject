@@ -6,7 +6,7 @@ import java.net.*;
 
 import java.util.*;
 
-public class POP3Session {
+public class TPOPSession {
 	/** 15 sec. socket read timeout */
 	public static final int SOCKET_READ_TIMEOUT = 15 * 1000;
 
@@ -23,14 +23,14 @@ public class POP3Session {
 	 * Creates new POP3 session by given POP3 host, username and password. Assumes
 	 * POP3 port is 110 (default for POP3 service).
 	 */
-	public POP3Session(String host, String userName, String password) {
+	public TPOPSession(String host, String userName, String password) {
 		this(host, 110, userName, password);
 	}
 
 	/**
 	 * Creates new POP3 session by given POP3 host and port, username and password.
 	 */
-	public POP3Session(String host, int port, String userName, String password) {
+	public TPOPSession(String host, int port, String userName, String password) {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;

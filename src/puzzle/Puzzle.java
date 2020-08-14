@@ -1,5 +1,6 @@
 package puzzle;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Puzzle {
@@ -66,10 +67,24 @@ public class Puzzle {
 	        characters[randomIndex] = temp;
 	    }
 	    return characters;
-	}
+	}  
 	
+	// Method to sort a string alphabetically 
+    public String sortString(String inputString) 
+    { 
+        // convert input string to char array 
+        char tempArray[] = inputString.toCharArray(); 
+          
+        // sort tempArray 
+        Arrays.sort(tempArray); 
+          
+        // return new sorted string 
+        return new String(tempArray); 
+    } 
+	
+    //To solve the puzzle all we have to do is sort the string
 	public boolean checkSolution(String solution) {
-		return true;
+		return solution.equals(sortString(puzzle));
 		
 	}
 

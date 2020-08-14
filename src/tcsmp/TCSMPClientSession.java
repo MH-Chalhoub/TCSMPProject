@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -234,7 +235,7 @@ public class TCSMPClientSession {
 		// A "." on a line by itself ends a message.
 		doCommand(".", '2');
 		
-		doCommand("PKEY " + getDomain(recipient) + " " + p.getRow() + "," + p.getCol() + " " + p.getPuzzle(), '2');
+		doCommand("PKEY " + checkForPattern(response) + " " + p.getRow() + "," + p.getCol() + " " + sortString(p.getPuzzle()), '2');
 
 		doCommand("QUIT", '2');
 
@@ -254,4 +255,17 @@ public class TCSMPClientSession {
 	    }
 		return theGroup;
 	}
+	
+	// Method to sort a string alphabetically 
+    public String sortString(String inputString) 
+    { 
+        // convert input string to char array 
+        char tempArray[] = inputString.toCharArray(); 
+          
+        // sort tempArray 
+        Arrays.sort(tempArray); 
+          
+        // return new sorted string 
+        return new String(tempArray); 
+    } 
 }

@@ -149,7 +149,7 @@ public class TCSMPClientHandler extends Thread {
 //		System.out.println("getDomain(reciverMail).equals(\"POUET.com\") : " + getDomain(reciverMail).equals("POUET.com"));
 		if(!getDomain(reciverMail).equals(serverDomain)) {
 
-	    	TCSMPServerSession tcsmp = new TCSMPServerSession(
+			TCSMPClientSession tcsmp = new TCSMPClientSession(
 	           "localhost",
 	           1998,
 	           mail.getReciver(),
