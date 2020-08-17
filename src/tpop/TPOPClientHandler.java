@@ -86,11 +86,18 @@ public class TPOPClientHandler extends Thread {
 					if (tokens[0].equals("PASS")) {
 						if (getUser(users, username).getPassword().equals(tokens[1])) {
 							box = getUserMailBox(mailBoxs, username);
-							out.writeUTF("+OK " + username + "'s maildrop has " + box.getMailBoxMessagesNb()
-									+ " messages (" + box.getMailBoxMessagesSize() + " octets)");
-							System.out.println("C : " + message_in);
-							System.out.println("S : +OK " + username + "'s maildrop has " + box.getMailBoxMessagesNb()
-									+ " messages (" + box.getMailBoxMessagesSize() + " octets)");
+							if(!(box == null)) {
+								out.writeUTF("+OK " + username + "'s maildrop has " + box.getMailBoxMessagesNb()
+								+ " messages (" + box.getMailBoxMessagesSize() + " octets)");
+						System.out.println("C : " + message_in);
+						System.out.println("S : +OK " + username + "'s maildrop has " + box.getMailBoxMessagesNb()
+								+ " messages (" + box.getMailBoxMessagesSize() + " octets)");
+							}
+							else {
+								out.writeUTF("+OK " + username + "'s maildrop has 0 messages (0 octets)");
+								System.out.println("C : " + message_in);
+								System.out.println("S : +OK " + username + "'s maildrop has 0 messages (0 octets)");
+							}
 							identifed = true;
 						} else {
 							out.writeUTF("-ERR invalid password");
@@ -141,11 +148,11 @@ public class TPOPClientHandler extends Thread {
 							int mailBoxmsgNb = box.getMails().size();
 							if(msgNb <= mailBoxmsgNb) {
 								out.writeUTF("+OK " + box.getMails().get(msgNb).getMailSize() + " octets");
-								out.writeUTF(box.getMails().get(msgNb).getMailData());
+								out.writeUTF(box.getMails().get(msgNb).getfullMail());
 								out.writeUTF(".");
 								System.out.println("C : " + message_in);
 								System.out.println("S : +OK " + box.getMails().get(msgNb).getMailSize() + " octets");
-								System.out.println("S : " + box.getMails().get(msgNb).getMailData());
+								System.out.println("S : " + box.getMails().get(msgNb).getfullMail());
 								System.out.println(".");
 							}
 							else {
@@ -229,6 +236,6 @@ public class TPOPClientHandler extends Thread {
 			if (b.getUser().equals(user))
 				return b;
 		}
-		return null;
+		return new MailBox(user, new ArrayList<Mail>());
 	}
 }

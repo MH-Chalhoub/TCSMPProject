@@ -20,12 +20,14 @@ import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.text.DefaultHighlighter;
 
+import tcsmp.TCSMPClient;
 import tcsmp.TCSMPClientSession;
 
 import java.awt.event.FocusAdapter;
@@ -59,6 +61,8 @@ public class Login extends JFrame {
 	protected Socket tcsmpSocket;
 	protected DataInputStream in;
 	protected DataOutputStream out;
+
+    static HashMap<String, Integer> tcsmpdns;
 	
 	public static void main(String[] args) {
 		try {
@@ -94,8 +98,10 @@ public class Login extends JFrame {
 		setLocationRelativeTo(null);
 		setTitle("Verger");
 		setSize(this.getWidth() + adjustWidth, this.getHeight() + adjustHeight);
-		
-		TCSMPClientSession tcsmp = new TCSMPClientSession("localhost", 1999);
+
+		tcsmpdns = new HashMap<String, Integer>();
+		tcsmpdns.put("BINIOU.com", 1998);
+		tcsmpdns.put("POUET.com", 1999);
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////textField/////////////////////////////////////////////////////////////////
@@ -222,11 +228,15 @@ public class Login extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//Main_panel frame = new Main_panel();
-					//frame.setVisible(true);
 					//System.out.println(textField.getText().toString());
 					//System.out.println(passwordField.getText().toString());
-					tcsmp.register(textField.getText().toString(), passwordField.getText().toString());
+
+					TCSMPClientSession tcsmp = new TCSMPClientSession("localhost", tcsmpdns.get(getDomain(textField.getText().toString())));
+					boolean done = tcsmp.register(textField.getText().toString(), passwordField.getText().toString());
+					if(done) {
+						TCSMPClient frame = new TCSMPClient(textField.getText().toString(), passwordField.getText().toString());
+						frame.setVisible(true);
+					}
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -243,6 +253,10 @@ public class Login extends JFrame {
 		////////////////////////////////////////////////////btnCancel//////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnCancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -398,6 +412,10 @@ public class Login extends JFrame {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
+	}
+	static String getDomain(String mail) {
+		String[] domain = mail.split("@");
+		return domain[1];
 	}
 
 }

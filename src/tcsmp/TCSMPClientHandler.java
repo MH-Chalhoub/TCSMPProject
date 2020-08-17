@@ -171,22 +171,23 @@ public class TCSMPClientHandler extends Thread {
 		}
 		else {
 			addToMailBoxs(mailBoxs, reciverMail, mail);
-
 		}
 	}
 	
 	public void addToMailBoxs(ArrayList<MailBox> mailBoxs, String reciverMail, Mail mail) {
+		boolean newMailAdded = false;
 		for(MailBox m : mailBoxs) {
 			//if the user is already register in the mailBoxs the new mail added directly to the mailBoxs
 			if(m.getUser().equals(reciverMail)) {
 				m.addNewMail(mail);
+				newMailAdded = true;
 			}
-			else {
-				ArrayList<Mail> mails = new ArrayList<Mail> ();
-				mails.add(mail);
-				MailBox mailBox = new MailBox(reciverMail, mails);
-				mailBoxs.add(mailBox);
-			}
+		}
+		if(!newMailAdded) {
+			ArrayList<Mail> mails = new ArrayList<Mail> ();
+			mails.add(mail);
+			MailBox mailBox = new MailBox(reciverMail, mails);
+			mailBoxs.add(mailBox);
 		}
 	}
 	

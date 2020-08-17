@@ -1,6 +1,5 @@
 package entities;
 
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class MailBox {
@@ -55,5 +54,11 @@ public class MailBox {
 		else
 			return false;
 	}
+
+	@Override
+	public String toString() {
+		return "MailBox [user=" + user + ", mails=" + mails.toString() + "]";
+	}
+	
     
 }

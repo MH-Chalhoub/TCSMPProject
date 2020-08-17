@@ -265,7 +265,7 @@ public class TCSMPClientSession {
 		doCommand("QUIT", '2');
 
 		// Message is sent. Close the connection to the server
-		// close();
+		 close();
 	}
 	
 	static String checkForPattern(String string) {

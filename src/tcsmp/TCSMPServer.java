@@ -6,35 +6,49 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 
 import entities.Mail;
 import entities.MailBox;
 import entities.User;
+import tpop.TPOPClientHandler;
 
 //The role of the TCSMP Server is contacting clients according to TCSMP Protocol defined in the RFC and forwarding the msg to the TPOP Server
 
 public class TCSMPServer {
     private static ServerSocket servSock;
+    private static ServerSocket tpopservSock;
     private static Socket link;
+    private static Socket tpoplink;
     private static int PORT = 1998;
     private static String serverDomain = "POUET.com";
     private static String clientDomain;
     static HashMap<String, Integer> dns;
+    static HashMap<String, Integer> tpopdns;
     static boolean registerd = false;
     static DataOutputStream out;
     static DataInputStream in;
     static ArrayList<User> users;
+    static ArrayList<MailBox> MailBoxs;
 
 	public static void main(String[] args) {
+		//System.out.println("main : " + args[0]);
+		if(args[0] != null)
+			serverDomain = args[0];
 		ArrayList<TCSMPClientHandler> clients = new ArrayList<TCSMPClientHandler> ();
-		ArrayList<MailBox> MailBoxs = new ArrayList<MailBox> ();
+		ArrayList<TPOPClientHandler> tpopClients = new ArrayList<TPOPClientHandler> ();
+		MailBoxs = new ArrayList<MailBox> ();
 		 users = new ArrayList<User> ();
 		
 		dns = new HashMap<String, Integer>();	//I did use diffrent port for each TCSMP server because i have only one machine(one NIC Card)
 		dns.put("BINIOU.com", 1998);
 		dns.put("POUET.com", 1999);
+		
+		tpopdns = new HashMap<String, Integer>();	//I did use diffrent port for each TCSMP server because i have only one machine(one NIC Card)
+		tpopdns.put("BINIOU.com", 2000);
+		tpopdns.put("POUET.com", 2001);
 		
 		/*System.out.println("Enter Server Domain Name (BINIOU.com/POUET.com) : ");
 		Scanner inserverDomain = new Scanner(System.in);
@@ -84,7 +98,8 @@ public class TCSMPServer {
             					
             				}
             			}
-            			//System.out.println("Users list : " + users.toString());
+            			System.out.println("Users list : " + users.toString());
+            			System.out.println("Users Mailbox list : " + MailBoxs.toString());
             			/*------------------------------------------------------------------------------------------------------*/
                         //MailBox mb = new MailBox("", link.getPort(), link.getRemoteSocketAddress().toString(), "", serverDomain, link);
                         //MailBoxs.add(mb);
@@ -95,6 +110,41 @@ public class TCSMPServer {
             }
         };
         tcsmpThread.start();
+		
+        try {
+            tpopservSock = new ServerSocket(tpopdns.get(serverDomain));
+        } catch (IOException ex) {
+            System.out.println("Unable to connect to this port");
+        }
+        Thread tpopThread = new Thread()
+        {
+            public void run() {
+
+                try {
+                    while (true) {
+                    	System.out.println("Wainting for connection ...");
+                    	tpoplink = tpopservSock.accept();
+                        System.out.println("Connection accepted ...");
+                        /*------------------------------------------------------------------------------------------------------*/
+                    	DataOutputStream out;
+                    	DataInputStream in;
+            			out = new DataOutputStream(tpoplink.getOutputStream());
+            			in = new DataInputStream(tpoplink.getInputStream());
+                        //System.out.println("IP = " + link.getInetAddress() + " Port = " + link.getPort());
+            			out.writeUTF("+OK " + serverDomain + " TPOP Server Process at " + new Date().toString());
+            			clientDomain = in.readUTF();
+            			clientDomain = clientDomain.replace("\n", "").replace("\r", "");
+            			/*------------------------------------------------------------------------------------------------------*/
+            			TPOPClientHandler tpopCl = new TPOPClientHandler(tpoplink, tpopClients, serverDomain, clientDomain, MailBoxs, users);
+            			tpopCl.start();
+            			tpopClients.add(tpopCl);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+        tpopThread.start();
         
 	}
 	

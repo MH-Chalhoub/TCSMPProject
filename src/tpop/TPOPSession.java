@@ -43,8 +43,13 @@ public class TPOPSession {
 	 */
 
 	protected void checkForError(String response) throws IOException {
-		if (response.charAt(0) != '+')
+		if (response.charAt(0) == '+' || response.charAt(0) == '2') {
+			
+		}
+		else {
 			throw new IOException(response);
+		}
+			
 	}
 
 	/**

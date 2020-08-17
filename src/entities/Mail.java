@@ -21,6 +21,7 @@ public class Mail {
 	String sender,reciver;
 	String subject;
 	String mailData = "";
+	String fullMailData;
 	
 	public Mail(String date, String sender, String reciver, String subject, String mailData) {
 		this.date = date;
@@ -32,6 +33,19 @@ public class Mail {
 
 	public Mail(String fullMail) throws IOException {
 		devideMsg(fullMail);
+		this.fullMailData = fullMail;
+	}
+	public String getfullMail() {
+		String s = "Date: " + date + "\r\n" +
+				"Sender: " + sender + "\r\n" +
+				"From: " + sender + "\r\n" +
+				"To: " + reciver + "\r\n" +
+				"Subject: " + subject + "\r\n" +
+				"\r\n" + 
+				"\r\n" + 
+				mailData + "\r\n" + 
+				".";
+		return s;
 	}
 	
 	public void devideMsg(String fullMail) throws IOException {
@@ -108,6 +122,12 @@ public class Mail {
 	}
 	public int getMailSize() {
 		return date.length() + sender.length() + reciver.length() + subject.length() + mailData.length();
+	}
+
+	@Override
+	public String toString() {
+		return "Mail [date=" + date + ", sender=" + sender + ", reciver=" + reciver + ", subject=" + subject
+				+ ", mailData=" + mailData + "]";
 	}
 	
 
