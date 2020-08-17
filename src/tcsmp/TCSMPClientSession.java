@@ -59,6 +59,12 @@ public class TCSMPClientSession {
 	public TCSMPClientSession(String host, String recipient, String sender, String subject, String message) {
 		this(host, 1999, recipient, sender, subject, message);
 	}
+	
+
+	public TCSMPClientSession(String host, int port) {
+		this.host = host;
+		this.port = port;
+	}
 
 	/**
 	 * Closes down the connection to TCSMP server (if open). Should be called if an
@@ -104,7 +110,7 @@ public class TCSMPClientSession {
 	 * 
 	 * @return response received from the server.
 	 */
-
+	
 	protected String sendCommand(String commandString) throws IOException {
 		out.writeUTF(commandString + "\n");
 		System.out.println("C : " + commandString);
@@ -187,6 +193,25 @@ public class TCSMPClientSession {
 		headers = headers + "To: " + recipient + "\n";
 		headers = headers + "Subject: " + subject + "\n";
 		return headers + "\n\n";
+	}
+
+	/**
+	 * Register new user if the user does not already exist and if the
+	 * User already registerd it only sign in.
+	 */
+
+	public boolean register(String username, String password) throws IOException {
+
+		tcsmpSocket = new Socket(host, port);
+		
+		in = new DataInputStream(tcsmpSocket.getInputStream());
+		out = new DataOutputStream(tcsmpSocket.getOutputStream());
+
+		out.writeUTF("REG");
+		doCommand("REG " + username + " " + password, '2');
+		close();
+		
+		return true;
 	}
 
 	/**

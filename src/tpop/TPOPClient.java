@@ -4,7 +4,7 @@ import java.util.StringTokenizer;
 
 public class TPOPClient {
 	public static void main(String[] args) {
-		TPOPSession tpop = new TPOPSession("pop.mycompany.com", "username", "password");
+		TPOPSession tpop = new TPOPSession("localhost", "Y@BINIOU.com", "password");
 		try {
 			System.out.println("Connecting to TPOP server...");
 			tpop.connectAndAuthenticate();
@@ -20,11 +20,11 @@ public class TPOPClient {
 				String messageSize = messageTokens.nextToken();
 				String messageBody = tpop.getMessage(messageId);
 
-				System.out.println("\n-------------------- messsage " + messageId + ", size=" + messageSize
-						+ " --------------------");
+				System.out.println("\n-------------------- message " + messageId + ", size=" + messageSize + " --------------------");
 				System.out.print(messageBody);
 				System.out.println("-------------------- end of message " + messageId + " --------------------");
 			}
+			tpop.quit();
 		} catch (Exception e) {
 			tpop.close();
 			System.out.println("Can not receive e-mail!");

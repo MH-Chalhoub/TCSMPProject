@@ -10,9 +10,9 @@ public class TPOPSession {
 	/** 15 sec. socket read timeout */
 	public static final int SOCKET_READ_TIMEOUT = 15 * 1000;
 
-	protected Socket pop3Socket;
-	protected BufferedReader in;
-	protected PrintWriter out;
+	protected Socket tpopSocket;
+	protected DataInputStream in;
+	protected DataOutputStream out;
 
 	private String host;
 	private int port;
@@ -20,15 +20,15 @@ public class TPOPSession {
 	private String password;
 
 	/**
-	 * Creates new POP3 session by given POP3 host, username and password. Assumes
-	 * POP3 port is 110 (default for POP3 service).
+	 * Creates new TPOP session by given TPOP host, username and password. Assumes
+	 * TPOP port is 110 (default for TPOP service).
 	 */
 	public TPOPSession(String host, String userName, String password) {
-		this(host, 110, userName, password);
+		this(host, 2000, userName, password);
 	}
 
 	/**
-	 * Creates new POP3 session by given POP3 host and port, username and password.
+	 * Creates new TPOP session by given TPOP host and port, username and password.
 	 */
 	public TPOPSession(String host, int port, String userName, String password) {
 		this.host = host;
@@ -38,7 +38,7 @@ public class TPOPSession {
 	}
 
 	/**
-	 * Throws exception if given server response if negative. According to POP3
+	 * Throws exception if given server response if negative. According to TPOP
 	 * protocol, positive responses start with a '+' and negative start with '-'.
 	 */
 
@@ -48,7 +48,7 @@ public class TPOPSession {
 	}
 
 	/**
-	 * @return the current number of messages using the POP3 STAT command.
+	 * @return the current number of messages using the TPOP STAT command.
 	 */
 
 	public int getMessageCount() throws IOException {
@@ -88,7 +88,7 @@ public class TPOPSession {
 	}
 
 	/**
-	 * Retrieves the entire text of a message using the POP3 RETR command.
+	 * Retrieves the entire text of a message using the TPOP RETR command.
 	 */
 	public String getMessage(String messageId) throws IOException {
 		doCommand("RETR " + messageId);
@@ -98,11 +98,12 @@ public class TPOPSession {
 			message.append(messageLines[i]);
 			message.append("\n");
 		}
+		System.out.println("S : " + new String(message));
 		return new String(message);
 	}
 
 	/**
-	 * Retrieves the first <linecount> lines of a message using the POP3 TOP
+	 * Retrieves the first <linecount> lines of a message using the TPOP TOP
 	 * command. Note: this command may not be available on all servers. If it isn't
 	 * available, you'll get an exception.
 	 */
@@ -126,18 +127,20 @@ public class TPOPSession {
 	}
 
 	/**
-	 * Connects to the POP3 server and logs on it with the USER and PASS commands.
+	 * Connects to the TPOP server and logs on it with the USER and PASS commands.
 	 */
 
 	public void connectAndAuthenticate() throws IOException {
 		// Make the connection
-		pop3Socket = new Socket(host, port);
-		pop3Socket.setSoTimeout(SOCKET_READ_TIMEOUT);
-		in = new BufferedReader(new InputStreamReader(pop3Socket.getInputStream()));
-		out = new PrintWriter(new OutputStreamWriter(pop3Socket.getOutputStream()));
+		tpopSocket = new Socket(host, port);
+		//tpopSocket.setSoTimeout(SOCKET_READ_TIMEOUT);
+		in = new DataInputStream(tpopSocket.getInputStream());
+		out = new DataOutputStream(tpopSocket.getOutputStream());
+
+		out.writeUTF(userName + "\n");
 
 		// Receive the welcome message
-		String response = in.readLine();
+		String response = in.readUTF();
 		checkForError(response);
 
 		// Send a USER command to authenticate
@@ -148,42 +151,45 @@ public class TPOPSession {
 	}
 
 	/**
-	 * Closes down the connection to POP3 server (if open). Should be called if an
-	 * exception is raised during the POP3 session.
+	 * Closes down the connection to TPOP server (if open). Should be called if an
+	 * exception is raised during the TPOP session.
 	 */
 	public void close() {
 		try {
 			in.close();
 			out.close();
-			pop3Socket.close();
+			tpopSocket.close();
 		} catch (Exception ex) {
 			// Ignore the exception. Probably the socket is not open.
 		}
 	}
 
 	/**
-	 * Sends a POP3 command and retrieves the response. If the response is negative
+	 * Sends a TPOP command and retrieves the response. If the response is negative
 	 * (begins with '-'), throws an IOException with received response.
 	 */
 	protected String doCommand(String command) throws IOException {
-		out.println(command);
+		out.writeUTF(command);
+		System.out.println("C : " + command);
 		out.flush();
-		String response = in.readLine();
+		String response = in.readUTF();
 		checkForError(response);
+		System.out.println("S : " + response);
 		return response;
 	}
 
 	/**
-	 * Retrieves a multi-line POP3 response. If a line contains "." by itself, it is
+	 * Retrieves a multi-line TPOP response. If a line contains "." by itself, it is
 	 * the end of the response. If a line starts with a ".", it should really have
 	 * two "."'s. We strip off the leading ".". If a line does not start with ".",
 	 * there should be at least one line more.
 	 */
 	protected String[] getMultilineResponse() throws IOException {
-		ArrayList lines = new ArrayList();
+		ArrayList<String> lines = new ArrayList<String>();
 
 		while (true) {
-			String line = in.readLine();
+			String line = in.readUTF();
+			System.out.println("S : " + line);
 
 			if (line == null) {
 				// Server closed connection
@@ -191,6 +197,7 @@ public class TPOPSession {
 			}
 
 			if (line.equals(".")) {
+				System.out.println("No more lines in the server response");
 				// No more lines in the server response
 				break;
 			}
@@ -204,6 +211,7 @@ public class TPOPSession {
 			lines.add(line);
 		}
 
+		
 		String response[] = new String[lines.size()];
 		lines.toArray(response);
 		return response;

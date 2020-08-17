@@ -1,4 +1,4 @@
-package mail;
+package entities;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class Mail {
 				this.subject = tokens[1].replace("\n", "").replace("\r", "").trim();
 			}
 			else {
-				if(!line.equals(".\n") && line!=null)
+				if(!line.equals(".\r\n") && line!=null)
 					this.mailData += line;
 			}
 		}
@@ -105,6 +105,9 @@ public class Mail {
 
 	public void setMailData(String mailData) {
 		this.mailData = mailData;
+	}
+	public int getMailSize() {
+		return date.length() + sender.length() + reciver.length() + subject.length() + mailData.length();
 	}
 	
 

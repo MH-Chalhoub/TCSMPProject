@@ -10,7 +10,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mail.Mail;
+import entities.Mail;
+import entities.MailBox;
+import entities.User;
 import puzzle.Puzzle;
 
 
@@ -26,10 +28,10 @@ public class TCSMPClientHandler extends Thread {
 	Puzzle p;
 	boolean identifed = false;
 	Mail mail;
-	ArrayList<Mail> mailBoxs;
+	ArrayList<MailBox> mailBoxs;
 	
 
-	public TCSMPClientHandler(Socket link, ArrayList<TCSMPClientHandler> clients, String serverDomain, String clientDomain, ArrayList<Mail> mailBoxs) {
+	public TCSMPClientHandler(Socket link, ArrayList<TCSMPClientHandler> clients, String serverDomain, String clientDomain, ArrayList<MailBox> mailBoxs) {
 		this.link = link;
 		this.clients = clients;
 		this.serverDomain = serverDomain;
@@ -168,7 +170,23 @@ public class TCSMPClientHandler extends Thread {
 	        }
 		}
 		else {
-			mailBoxs.add(mail);
+			addToMailBoxs(mailBoxs, reciverMail, mail);
+
+		}
+	}
+	
+	public void addToMailBoxs(ArrayList<MailBox> mailBoxs, String reciverMail, Mail mail) {
+		for(MailBox m : mailBoxs) {
+			//if the user is already register in the mailBoxs the new mail added directly to the mailBoxs
+			if(m.getUser().equals(reciverMail)) {
+				m.addNewMail(mail);
+			}
+			else {
+				ArrayList<Mail> mails = new ArrayList<Mail> ();
+				mails.add(mail);
+				MailBox mailBox = new MailBox(reciverMail, mails);
+				mailBoxs.add(mailBox);
+			}
 		}
 	}
 	
