@@ -108,7 +108,7 @@ public class TCSMPClient  extends JFrame
 		setContentPane(contentPane);
 		//setAutoRequestFocus(false);
 		setLocationRelativeTo(null);
-		setTitle("TCSMPClient");
+		setTitle("TCSMPClient <" + username + ">");
 		setSize(this.getWidth() + adjustWidth, this.getHeight() + adjustHeight);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
@@ -117,19 +117,10 @@ public class TCSMPClient  extends JFrame
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 		ImageIcon newMail_logo = new ImageIcon(new 
-				ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\depence.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+				ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\depence.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 
 		ImageIcon inbox_logo = new ImageIcon(new 
-				ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\entree.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-
-		ImageIcon facture_logo = new ImageIcon(new 
-				ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\facture.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-
-		ImageIcon employe_logo = new ImageIcon(new 
-				ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\employe.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-
-		ImageIcon verger_logo = new ImageIcon(new 
-				ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\verger.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+				ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\entree.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,6 +224,7 @@ public class TCSMPClient  extends JFrame
 		tpop.connectAndAuthenticate();
 		int messageCount = tpop.getMessageCount();
 		String[] messages = tpop.getHeaders();
+		m.setRowCount(0);
 		for (int i = 0; i < messages.length; i++) {
 			StringTokenizer messageTokens = new StringTokenizer(messages[i]);
 			String messageId = messageTokens.nextToken();

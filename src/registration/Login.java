@@ -96,7 +96,7 @@ public class Login extends JFrame {
 		contentPane.setLayout(null);
 		setAutoRequestFocus(false);
 		setLocationRelativeTo(null);
-		setTitle("Verger");
+		setTitle("Login");
 		setSize(this.getWidth() + adjustWidth, this.getHeight() + adjustHeight);
 
 		tcsmpdns = new HashMap<String, Integer>();
@@ -316,7 +316,7 @@ public class Login extends JFrame {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		loginLabel = new JLabel("");
 		ImageIcon login_logo = new ImageIcon(
-				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\login.png").getImage()
+				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\login.png").getImage()
 						.getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		loginLabel.setIcon(login_logo);
@@ -331,7 +331,7 @@ public class Login extends JFrame {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		passlabel = new JLabel("");
 		ImageIcon pass_logo = new ImageIcon(
-				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\password.png").getImage()
+				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\password.png").getImage()
 						.getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		passlabel.setHorizontalAlignment(SwingConstants.CENTER);
 		passlabel.setIcon(pass_logo);
@@ -346,7 +346,7 @@ public class Login extends JFrame {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		confirmlabel = new JLabel("");
 		ImageIcon confirm_logo = new ImageIcon(
-				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\confirm.png").getImage()
+				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\confirm.png").getImage()
 						.getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		confirmlabel.setVisible(false);
 		confirmlabel.setIcon(confirm_logo);
@@ -362,10 +362,10 @@ public class Login extends JFrame {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		visiblelabel = new JLabel("");
 		ImageIcon visible_logo = new ImageIcon(
-				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\visible.png").getImage()
+				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\visible.png").getImage()
 						.getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		ImageIcon invisible_logo = new ImageIcon(
-				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\invisible.png").getImage()
+				new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\invisible.png").getImage()
 						.getScaledInstance(35, 35, Image.SCALE_DEFAULT));
 		visiblelabel.addMouseListener(new MouseAdapter() {
 			@SuppressWarnings("deprecation")
@@ -406,7 +406,7 @@ public class Login extends JFrame {
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		////////////////////////////////////////////////frame_logo/////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		ImageIcon frame_logo = new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\lab\\assets\\frameicon.png");
+		ImageIcon frame_logo = new ImageIcon("C:\\Users\\Chalhoub\\eclipse-workspace\\TCSMPProject\\src\\assets\\frameicon.png");
 		setIconImage(frame_logo.getImage());
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -29,6 +30,7 @@ public class TCSMPClientHandler extends Thread {
 	boolean identifed = false;
 	Mail mail;
 	ArrayList<MailBox> mailBoxs;
+    HashMap<String, Integer> tcsmpdns;
 	
 
 	public TCSMPClientHandler(Socket link, ArrayList<TCSMPClientHandler> clients, String serverDomain, String clientDomain, ArrayList<MailBox> mailBoxs) {
@@ -48,6 +50,11 @@ public class TCSMPClientHandler extends Thread {
 	}
 
 	public void run() {
+		
+		tcsmpdns = new HashMap<String, Integer>();	//I did use diffrent port for each TCSMP server because i have only one machine(one NIC Card)
+		tcsmpdns.put("BINIOU.com", 1998);
+		tcsmpdns.put("POUET.com", 1999);
+		
 		String message_in = null;
 		
 		try {
@@ -153,7 +160,7 @@ public class TCSMPClientHandler extends Thread {
 
 			TCSMPClientSession tcsmp = new TCSMPClientSession(
 	           "localhost",
-	           1998,
+	           tcsmpdns.get(getDomain(reciverMail)),
 	           mail.getReciver(),
 	           mail.getSender(),
 	           mail.getSubject(),
