@@ -8,7 +8,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import puzzle.Puzzle;
 
@@ -104,7 +107,7 @@ public class TCSMPServerSession {
 
 	protected String sendCommand(String commandString) throws IOException {
 		out.writeUTF(commandString + "\n");
-		System.out.println(commandString + "\n");
+		System.out.println("C : " + commandString);
 		out.flush();
 		String response = getResponse();
 		return response;
@@ -116,9 +119,10 @@ public class TCSMPServerSession {
 	 * reply (which is unexpected).
 	 */
 
-	protected void doCommand(String commandString, char expectedResponseStart) throws IOException {
+	protected String doCommand(String commandString, char expectedResponseStart) throws IOException {
 		String response = sendCommand(commandString);
 		checkServerResponse(response, expectedResponseStart);
+		return response;
 	}
 
 	/**
@@ -155,7 +159,7 @@ public class TCSMPServerSession {
 			}
 			response += line + "\n";
 		} while ((line.length() > 3) && (line.charAt(3) == '-'));
-		System.out.println(response);
+		System.out.println("S : " + response);
 
 		return response;
 
@@ -199,7 +203,7 @@ public class TCSMPServerSession {
 		// System.out.println("checkServerResponse done");
 
 		// Introduce ourselves to the TCSMP server with a polite "HELO localhostname"
-		doCommand("TELO " + getDomain(recipient), '2');
+		doCommand("TELO " + checkForPattern(response), '2');
 
 		// Tell the server who this message is from
 		doCommand("FROM <" + sender + ">", '2');
@@ -228,16 +232,41 @@ public class TCSMPServerSession {
 			  else
 				  out.writeUTF(line + "\n");
 		}
-		System.out.println("Headers sent!!!");
+										
 		// A "." on a line by itself ends a message.
 		doCommand(".", '2');
-		System.out.println(".!!!");
+							 
 		
-		doCommand("PKEY " + getDomain(recipient) + " " + p.getRow() + "," + p.getCol() + " " + p.getPuzzle(), '2');
+		doCommand("PKEY " + checkForPattern(response) + " " + p.getRow() + "," + p.getCol() + " " + sortString(p.getPuzzle()), '2');
 
 		doCommand("QUIT", '2');
 
 		// Message is sent. Close the connection to the server
-		// close();
+		 close();
 	}
+	static String checkForPattern(String string) {
+		Pattern pattern = Pattern.compile("[a-zA-Z0-9_-]+.com", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(string);
+		boolean matchFound = matcher.find();
+		String theGroup = null;
+	    if (matchFound)
+	    {
+	      // we're only looking for one group, so get it
+	      theGroup = matcher.group(0);
+	    }
+		return theGroup;
+	}
+	
+	// Method to sort a string alphabetically 
+    public String sortString(String inputString) 
+    { 
+        // convert input string to char array 
+        char tempArray[] = inputString.toCharArray(); 
+          
+        // sort tempArray 
+        Arrays.sort(tempArray); 
+          
+        // return new sorted string 
+        return new String(tempArray); 
+    } 										   
 }

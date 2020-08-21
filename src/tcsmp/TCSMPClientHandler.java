@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JOptionPane;
+
 import entities.Mail;
 import entities.MailBox;
 import entities.User;
@@ -27,7 +29,7 @@ public class TCSMPClientHandler extends Thread {
 	String serverDomain, clientDomain;
 	String senderMail, reciverMail;
 	Puzzle p;
-	boolean identifed = false;
+	boolean identifed = false, resolved = false;
 	Mail mail;
 	ArrayList<MailBox> mailBoxs;
     HashMap<String, Integer> tcsmpdns;
@@ -135,10 +137,12 @@ public class TCSMPClientHandler extends Thread {
 						if(p.checkSolution(tokens[3])) {
 							out.writeUTF("216 your mail has been kept!");
 							System.out.println("216 your mail has been kept!");
+							resolved = true;
 						}
 						else {
 							out.writeUTF("516 solving ERROR");
 							System.out.println("516 solving ERROR");
+							resolved = false;
 						}
 							
 					}
@@ -156,28 +160,30 @@ public class TCSMPClientHandler extends Thread {
 //		System.out.println("reciverMail : " + reciverMail);
 //		System.out.println("getDomain(reciverMail) : " + getDomain(reciverMail));
 //		System.out.println("getDomain(reciverMail).equals(\"POUET.com\") : " + getDomain(reciverMail).equals("POUET.com"));
-		if(!getDomain(reciverMail).equals(serverDomain)) {
+		if(resolved) {
+			if(!getDomain(reciverMail).equals(serverDomain)) {
 
-			TCSMPClientSession tcsmp = new TCSMPClientSession(
-	           "localhost",
-	           tcsmpdns.get(getDomain(reciverMail)),
-	           mail.getReciver(),
-	           mail.getSender(),
-	           mail.getSubject(),
-	           mail.getMailData());
+				TCSMPServerSession tcsmp = new TCSMPServerSession(
+		           "localhost",
+		           tcsmpdns.get(getDomain(reciverMail)),
+		           mail.getReciver(),
+		           mail.getSender(),
+		           mail.getSubject(),
+		           mail.getMailData());
 
-	        try {
-	        	System.out.println("Sending e-mail...");
-	        	tcsmp.sendMessage();
-	        	System.out.println("E-mail sent.");
-	        } catch (Exception e) {
-	        	tcsmp.close();
-	        	System.out.println("Can not send e-mail!");
-	        	e.printStackTrace();
-	        }
-		}
-		else {
-			addToMailBoxs(mailBoxs, reciverMail, mail);
+		        try {
+		        	System.out.println("Sending e-mail...");
+		        	tcsmp.sendMessage();
+		        	System.out.println("E-mail sent.");
+		        } catch (Exception e) {
+		        	tcsmp.close();
+		        	System.out.println("Can not send e-mail!");
+		        	e.printStackTrace();
+		        }
+			}
+			else {
+				addToMailBoxs(mailBoxs, reciverMail, mail);
+			}
 		}
 	}
 	

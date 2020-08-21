@@ -18,6 +18,19 @@ public class Puzzle {
 		this.row = row;
 		this.col = col;
 	}
+
+	//215 POUET.com 2,2 YSVHYODGRDBYMSYE
+	public Puzzle(String strPuzzle) {
+		String [] tokens = strPuzzle.split(" ", 0);
+		String [] rowcol = tokens[2].split(",", 0);
+		
+		int r = Integer.parseInt(rowcol[0]);
+		int c = Integer.parseInt(rowcol[1]);
+
+		this.puzzle = tokens[3];
+		this.row = r;
+		this.col = c;
+	}
 	
 	public int getRow() {
 		return row;

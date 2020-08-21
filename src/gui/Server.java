@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import tcsmp.TCSMPServer;
+import java.awt.Color;
 
 public class Server {
 
@@ -21,6 +22,12 @@ public class Server {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.launchBeautyEyeLNF();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -46,12 +53,19 @@ public class Server {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 450, 300);
+		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
+		
 		JLabel lblSelectTheName = new JLabel("Select The Name of the Server");
+		lblSelectTheName.setBackground(Color.RED);
 		lblSelectTheName.setHorizontalAlignment(JLabel.CENTER);
-		frame.getContentPane().add(lblSelectTheName, BorderLayout.NORTH);
+
+		JPanel lblpanel = new JPanel();
+		lblpanel.setBackground(new Color(255, 228, 225));
+		lblpanel.add(lblSelectTheName);
+		frame.getContentPane().add(lblpanel, BorderLayout.NORTH);
 		
 		String s1[] = { "BINIOU.com", "POUET.com"}; 
 		
@@ -63,7 +77,7 @@ public class Server {
 		panel.setLayout(null);
 		
 		JComboBox comboBox = new JComboBox(s1);
-		comboBox.setBounds(167, 74, 95, 60);
+		comboBox.setBounds(120, 37, 191, 60);
 		panel.add(comboBox);
 
 		btnRun.addActionListener(new ActionListener() {

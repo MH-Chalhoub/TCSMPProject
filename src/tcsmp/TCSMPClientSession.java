@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JOptionPane;
+
 import puzzle.Puzzle;
 
 public class TCSMPClientSession {
@@ -137,8 +139,10 @@ public class TCSMPClientSession {
 	 */
 
 	protected void checkServerResponse(String response, char expectedResponseStart) throws IOException {
-		if (response.charAt(0) != expectedResponseStart)
+		if (response.charAt(0) != expectedResponseStart) {
+			JOptionPane.showMessageDialog(null, "WRONG SOLUTION !!!","Alert",JOptionPane.WARNING_MESSAGE); 
 			throw new IOException(response);
+		}
 	}
 
 	/**
@@ -236,7 +240,8 @@ public class TCSMPClientSession {
 		// Now tell the server who we want to send a message to
 		doCommand("RCPT <" + recipient + ">", '2');
 
-		doCommand("APZL", '2');
+		String strPuzzle = doCommand("APZL", '2');
+		Puzzle puzzle = new Puzzle(strPuzzle);
 
 		// Okay, now send the mail message. We expect a response beginning
 		// with '3' indicating that the server is ready for data.
@@ -259,8 +264,12 @@ public class TCSMPClientSession {
 		}
 		// A "." on a line by itself ends a message.
 		doCommand(".", '2');
+
+        String m = JOptionPane.showInputDialog("Sort the Puzzle : " + puzzle.getPuzzle());
+        //System.out.println(m);
 		
-		doCommand("PKEY " + checkForPattern(response) + " " + p.getRow() + "," + p.getCol() + " " + sortString(p.getPuzzle()), '2');
+		//doCommand("PKEY " + checkForPattern(response) + " " + p.getRow() + "," + p.getCol() + " " + sortString(p.getPuzzle()), '2');
+		doCommand("PKEY " + checkForPattern(response) + " " + p.getRow() + "," + p.getCol() + " " + m, '2');
 
 		doCommand("QUIT", '2');
 
